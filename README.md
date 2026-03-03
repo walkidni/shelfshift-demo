@@ -74,10 +74,28 @@ Run lint:
 uv run ruff check .
 ```
 
+Run type checks:
+
+```bash
+uv run ty check src/
+```
+
+## Deploy To Vercel
+
+This repository is prepared for Vercel's Python runtime with a root entrypoint:
+
+- `app.py` exports `app` (FastAPI instance)
+
+Deploy with Vercel CLI:
+
+```bash
+vercel deploy -y
+```
 
 ## Project Layout
 
 ```text
+app.py
 src/shelfshift_demo/
   config.py
   main.py
