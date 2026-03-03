@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="panel">
+    <h2 class="landing-heading">{{ docs_section_title }}</h2>
+    <p class="landing-subtitle">
+      In-app documentation synchronized from
+      <code>{{ docs_source_index }}</code>.
+    </p>
+  </section>
+
+  <section class="panel docs-layout">
+    <aside class="docs-sidebar" aria-label="Documentation pages">
+      <h3>Pages</h3>
+      <nav class="docs-pages-nav">
+        {% for page in docs_pages %}
+          <a
+            href="{{ page.path }}"
+            class="docs-page-link{% if page.slug == docs_current_slug %} is-active{% endif %}"
+            {% if page.slug == docs_current_slug %}aria-current="page"{% endif %}
+          >
+            {{ page.title }}
+          </a>
+        {% endfor %}
+      </nav>
+
+      {% if docs_toc_html %}
+        <div class="docs-toc">
+          <h3>On This Page</h3>
+          {{ docs_toc_html }}
+        </div>
+      {% endif %}
+    </aside>
+
+    <article class="docs-content">
+      <header class="docs-content-head">
+        <h2>{{ docs_current_title }}</h2>
+      </header>
+      <div class="markdown-body">
+        {{ docs_html }}
+      </div>
+
+      <footer class="docs-pagination">
+        {% if docs_prev_page %}
+          <a href="{{ docs_prev_page.path }}" class="docs-prev" rel="prev">Previous: {{ docs_prev_page.title }}</a>
+        {% endif %}
+        {% if docs_next_page %}
+          <a href="{{ docs_next_page.path }}" class="docs-next" rel="next">Next: {{ docs_next_page.title }}</a>
+        {% endif %}
+      </footer>
+    </article>
+  </section>
+{% endblock %}

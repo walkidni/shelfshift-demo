@@ -11,7 +11,8 @@
       href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;700;800&family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}?v=6" />
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}?v=10" />
+    <link rel="stylesheet" href="{{ url_for('static', path='/pygments.css') }}?v=1" />
     <style>
       :root {
         --brand-primary: {{ brand.brand_primary }};
@@ -56,8 +57,19 @@
             >
               URL Playground
             </a>
-            <a href="/docs" class="topnav-link topnav-link--utility" target="_blank" rel="noopener noreferrer">
-              Swagger
+            <a
+              href="/library"
+              class="topnav-link{% if active_page == 'library_docs' %} is-active{% endif %}"
+              {% if active_page == 'library_docs' %}aria-current="page"{% endif %}
+            >
+              Library Docs
+            </a>
+            <a
+              href="/cli"
+              class="topnav-link{% if active_page == 'cli_docs' %} is-active{% endif %}"
+              {% if active_page == 'cli_docs' %}aria-current="page"{% endif %}
+            >
+              CLI Docs
             </a>
           </nav>
         </div>

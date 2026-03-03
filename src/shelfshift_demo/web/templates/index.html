@@ -4,12 +4,12 @@
   <section class="panel">
     <h2 class="landing-heading">Library-first tooling for catalog translation pipelines</h2>
     <p class="landing-subtitle">
-      Use Shelfshift as a Python library or CLI in automation. The web interface is a thin facade for quickly exercising server features during local development.
+      Use Shelfshift as a Python library or CLI in automation. The web interface is a lightweight demo surface for quickly exercising local API flows during development.
     </p>
     <div class="surface-tags">
       <span class="surface-tag"><code>shelfshift.core</code> canonical engine</span>
       <span class="surface-tag"><code>shelfshift</code> CLI automation</span>
-      <span class="surface-tag"><code>shelfshift-server</code> self-hosted API</span>
+      <span class="surface-tag">FastAPI demo interface</span>
     </div>
   </section>
 
@@ -37,7 +37,6 @@ exported = export_csv(product, target="shopify", options={"publish": False, "wei
         <li><a href="/csv">CSV Playground</a>: POST <code>/api/v1/import/csv</code></li>
         <li>Export from canonical payload: POST <code>/api/v1/export/from-product.csv</code></li>
       </ul>
-      <p class="api-note">For complete API surface, use <a href="/docs" target="_blank" rel="noopener noreferrer">Swagger UI</a>.</p>
     </aside>
   </section>
 

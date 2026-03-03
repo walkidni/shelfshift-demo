@@ -16,16 +16,69 @@ def render_landing_page(
     request: Request,
     templates: Jinja2Templates,
 ) -> HTMLResponse:
+    return render_static_page(
+        request,
+        templates,
+        template_name="index.html",
+        active_page="home",
+    )
+
+
+def render_static_page(
+    request: Request,
+    templates: Jinja2Templates,
+    *,
+    template_name: str,
+    active_page: str,
+) -> HTMLResponse:
     settings = get_app_settings(request)
     return templates.TemplateResponse(
         request,
-        "index.html",
+        template_name,
         {
             "brand": settings,
-            "active_page": "home",
+            "active_page": active_page,
             "weight_unit_allowlist": {},
             "weight_unit_defaults": {},
             "source_weight_unit_required_platforms": [],
+        },
+    )
+
+
+def render_docs_page(
+    request: Request,
+    templates: Jinja2Templates,
+    *,
+    active_page: str,
+    docs_section_title: str,
+    docs_source_index: str,
+    docs_pages: list[dict[str, str]],
+    docs_current_slug: str,
+    docs_current_title: str,
+    docs_html: str,
+    docs_toc_html: str,
+    docs_prev_page: dict[str, str] | None,
+    docs_next_page: dict[str, str] | None,
+) -> HTMLResponse:
+    settings = get_app_settings(request)
+    return templates.TemplateResponse(
+        request,
+        "docs_page.html",
+        {
+            "brand": settings,
+            "active_page": active_page,
+            "weight_unit_allowlist": {},
+            "weight_unit_defaults": {},
+            "source_weight_unit_required_platforms": [],
+            "docs_section_title": docs_section_title,
+            "docs_source_index": docs_source_index,
+            "docs_pages": docs_pages,
+            "docs_current_slug": docs_current_slug,
+            "docs_current_title": docs_current_title,
+            "docs_html": docs_html,
+            "docs_toc_html": docs_toc_html,
+            "docs_prev_page": docs_prev_page,
+            "docs_next_page": docs_next_page,
         },
     )
 

@@ -9,10 +9,17 @@ from fastapi.templating import Jinja2Templates
 
 from shelfshift.core import export_csv
 from shelfshift.core.exporters.shared.weight_units import DEFAULT_WEIGHT_UNIT_BY_TARGET
+from ..helpers.docs_content import (
+	get_docs_neighbors,
+	get_docs_page,
+	get_docs_section,
+	load_docs_markdown,
+	render_docs_html,
+)
 from ..config import get_app_settings
 from ..helpers import importing as _importing_helpers
 from ..helpers.payload import product_to_json_b64, products_to_json_b64
-from ..helpers.rendering import render_landing_page, render_web_page
+from ..helpers.rendering import render_docs_page, render_landing_page, render_web_page
 from ..helpers.serialization import serialize_product_for_api
 
 TEMPLATE_DIR = Path(__file__).resolve().parent.parent / "web" / "templates"
@@ -39,6 +46,62 @@ def url_import_page(request: Request) -> HTMLResponse:
 		bigcommerce_csv_format="modern",
 		squarespace_product_page="",
 		squarespace_product_url="",
+	)
+
+
+@router.get("/library", response_class=HTMLResponse)
+def library_docs_page(request: Request) -> HTMLResponse:
+	return _render_docs_section_page(request, section_key="library", slug=None)
+
+
+@router.get("/cli", response_class=HTMLResponse)
+def cli_docs_page(request: Request) -> HTMLResponse:
+	return _render_docs_section_page(request, section_key="cli", slug=None)
+
+
+@router.get("/library/{slug}", response_class=HTMLResponse)
+def library_docs_subpage(request: Request, slug: str) -> HTMLResponse:
+	return _render_docs_section_page(request, section_key="library", slug=slug)
+
+
+@router.get("/cli/{slug}", response_class=HTMLResponse)
+def cli_docs_subpage(request: Request, slug: str) -> HTMLResponse:
+	return _render_docs_section_page(request, section_key="cli", slug=slug)
+
+
+def _render_docs_section_page(
+	request: Request,
+	*,
+	section_key: str,
+	slug: str | None,
+) -> HTMLResponse:
+	section = get_docs_section(section_key)
+	try:
+		page = get_docs_page(section, slug)
+		markdown_text = load_docs_markdown(section, page)
+	except FileNotFoundError as exc:
+		raise HTTPException(status_code=404, detail="Documentation page not found.") from exc
+
+	docs_html, docs_toc_html = render_docs_html(section, markdown_text)
+	prev_page, next_page = get_docs_neighbors(section, page)
+
+	def _page_item(item):
+		path = section.base_path if item.slug == "index" else f"{section.base_path}/{item.slug}"
+		return {"slug": item.slug, "title": item.title, "path": path}
+
+	return render_docs_page(
+		request,
+		templates,
+		active_page="library_docs" if section.key == "library" else "cli_docs",
+		docs_section_title=section.title,
+		docs_source_index=section.source_index,
+		docs_pages=[_page_item(item) for item in section.pages],
+		docs_current_slug=page.slug,
+		docs_current_title=page.title,
+		docs_html=docs_html,
+		docs_toc_html=docs_toc_html,
+		docs_prev_page=_page_item(prev_page) if prev_page else None,
+		docs_next_page=_page_item(next_page) if next_page else None,
 	)
 
 
