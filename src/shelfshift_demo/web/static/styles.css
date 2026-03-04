@@ -460,6 +460,56 @@ button:disabled {
   gap: var(--sp-sm);
 }
 
+.info-cta-grid {
+  display: grid;
+  gap: var(--sp-sm);
+}
+
+.info-cta-link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  background: var(--surface-overlay);
+  padding: 0.9rem 0.95rem;
+  text-decoration: none;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.info-cta-link:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--brand-primary), transparent 45%);
+  background: color-mix(in srgb, var(--brand-primary), var(--brand-ink) 86%);
+}
+
+.info-cta-link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--brand-primary), transparent 35%);
+  outline-offset: 2px;
+}
+
+.info-cta-title {
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.info-cta-copy {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.info-cta-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-cta-panel .info-cta-grid {
+  flex: 1;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+}
+
 .method-line {
   margin: var(--sp-sm) 0;
   font-size: 0.94rem;
@@ -961,8 +1011,28 @@ code {
   background: var(--surface-overlay);
 }
 
+.surface-tag-link {
+  text-decoration: none;
+}
+
+.surface-tag-link:hover {
+  border-color: color-mix(in srgb, var(--brand-primary), transparent 45%);
+  color: var(--text-primary);
+  background: color-mix(in srgb, var(--brand-primary), var(--brand-ink) 86%);
+}
+
+.surface-tag-link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--brand-primary), transparent 35%);
+  outline-offset: 2px;
+}
+
 .dev-grid {
-  align-items: start;
+  align-items: stretch;
+  grid-template-columns: minmax(280px, 0.92fr) minmax(0, 1.28fr);
+}
+
+.dev-grid > .panel {
+  height: 100%;
 }
 
 .dev-column h2,
@@ -993,6 +1063,27 @@ code {
   margin: 0;
   color: var(--text-secondary);
   font-size: 0.9rem;
+}
+
+.action-grid {
+  margin-top: var(--sp-sm);
+}
+
+.action-card {
+  display: block;
+  text-decoration: none;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.action-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--brand-primary), transparent 45%);
+  background: color-mix(in srgb, var(--brand-primary), var(--brand-ink) 88%);
+}
+
+.action-card:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--brand-primary), transparent 35%);
+  outline-offset: 2px;
 }
 
 /* ================================================================
@@ -1254,25 +1345,85 @@ code {
 }
 
 .markdown-body .codehilite {
+  position: relative;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   overflow: hidden;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.28),
+    0 0 0 1px color-mix(in srgb, var(--brand-secondary), transparent 80%);
+}
+
+.markdown-body .codehilite::before {
+  content: "";
+  display: block;
+  height: 28px;
+  border-bottom: 1px solid color-mix(in srgb, var(--brand-secondary), transparent 78%);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--brand-primary), var(--brand-ink) 78%),
+      color-mix(in srgb, var(--brand-secondary), var(--brand-ink) 88%)
+    );
+}
+
+.markdown-body .codehilite::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #ff5f56;
+  box-shadow:
+    13px 0 0 #ffbd2e,
+    26px 0 0 #27c93f;
 }
 
 .markdown-body .codehilite pre {
   margin: 0;
   border: 0;
   border-radius: 0;
-  background: transparent;
+  background: transparent !important;
+  padding: 14px 16px 16px;
 }
 
 .markdown-body .codehilite .gp {
-  color: color-mix(in srgb, var(--brand-secondary), white 12%);
+  color: color-mix(in srgb, var(--brand-secondary), white 22%);
   font-weight: 700;
 }
 
 .markdown-body .codehilite .go {
   color: var(--text-secondary);
+}
+
+.markdown-body .codehilite .nb,
+.markdown-body .codehilite .k,
+.markdown-body .codehilite .kr {
+  color: color-mix(in srgb, #c678dd, white 8%);
+}
+
+.markdown-body .codehilite .s,
+.markdown-body .codehilite .s1,
+.markdown-body .codehilite .s2,
+.markdown-body .codehilite .sa,
+.markdown-body .codehilite .sb {
+  color: color-mix(in srgb, #98c379, white 10%);
+}
+
+.markdown-body .codehilite .nv,
+.markdown-body .codehilite .vc,
+.markdown-body .codehilite .vg,
+.markdown-body .codehilite .vi {
+  color: color-mix(in srgb, #e06c75, white 10%);
+}
+
+.markdown-body .codehilite .c,
+.markdown-body .codehilite .c1,
+.markdown-body .codehilite .cm {
+  color: color-mix(in srgb, var(--text-muted), #9ca3af 25%);
+  font-style: italic;
 }
 
 .markdown-body table {
@@ -1343,6 +1494,65 @@ code {
 
 .docs-pagination a:hover {
   border-color: color-mix(in srgb, var(--brand-primary), transparent 35%);
+}
+
+.docs-cell-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.45rem 0 0.5rem;
+  flex-wrap: wrap;
+}
+
+.docs-cell-language {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  background: var(--surface-overlay);
+}
+
+.docs-cell-run-btn {
+  margin-top: 0;
+  padding: 0.42rem 0.75rem;
+  border-radius: 10px;
+  font-size: 0.84rem;
+}
+
+.docs-cell-reset-btn {
+  padding: 0.38rem 0.68rem;
+  font-size: 0.78rem;
+}
+
+.docs-cell-status {
+  margin: 0.05rem 0 0.35rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.docs-cell-output {
+  margin: 0 0 1rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--surface-base);
+  color: var(--text-primary);
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.docs-cell-output.is-hidden {
+  display: none;
 }
 
 /* ================================================================
@@ -1425,5 +1635,9 @@ code {
   .surface-tags {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .info-cta-panel .info-cta-grid {
+    grid-template-rows: none;
   }
 }

@@ -11,8 +11,8 @@
       href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;700;800&family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}?v=10" />
-    <link rel="stylesheet" href="{{ url_for('static', path='/pygments.css') }}?v=1" />
+    <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}?v=18" />
+    <link rel="stylesheet" href="{{ url_for('static', path='/pygments.css') }}?v=3" />
     <style>
       :root {
         --brand-primary: {{ brand.brand_primary }};
@@ -27,13 +27,9 @@
       <section class="panel hero hero-dev">
         <div class="hero-head">
           <div class="hero-copy">
-            <p class="eyebrow">Developer Toolkit</p>
+            <p class="eyebrow">Docs + Playground</p>
             <h1 class="brand-name">{{ brand.app_name }}</h1>
             <p class="tagline">{{ brand.app_tagline }}</p>
-            <p class="hero-meta">
-              Primary surfaces: <code>shelfshift.core</code> and <code>shelfshift</code> CLI.
-              Web pages are a local API playground.
-            </p>
           </div>
           <nav class="topnav" aria-label="Workflow pages">
             <a
@@ -42,20 +38,6 @@
               {% if active_page == 'home' %}aria-current="page"{% endif %}
             >
               Home
-            </a>
-            <a
-              href="/csv"
-              class="topnav-link{% if active_page == 'csv' %} is-active{% endif %}"
-              {% if active_page == 'csv' %}aria-current="page"{% endif %}
-            >
-              CSV Playground
-            </a>
-            <a
-              href="/url"
-              class="topnav-link{% if active_page == 'url' %} is-active{% endif %}"
-              {% if active_page == 'url' %}aria-current="page"{% endif %}
-            >
-              URL Playground
             </a>
             <a
               href="/library"
@@ -71,6 +53,20 @@
             >
               CLI Docs
             </a>
+            <a
+              href="/csv"
+              class="topnav-link{% if active_page == 'csv' %} is-active{% endif %}"
+              {% if active_page == 'csv' %}aria-current="page"{% endif %}
+            >
+              CSV Playground
+            </a>
+            <a
+              href="/url"
+              class="topnav-link{% if active_page == 'url' %} is-active{% endif %}"
+              {% if active_page == 'url' %}aria-current="page"{% endif %}
+            >
+              URL Playground
+            </a>
           </nav>
         </div>
       </section>
@@ -85,6 +81,6 @@
         sourceWeightRequiredPlatforms: {{ source_weight_unit_required_platforms | tojson }},
       };
     </script>
-    <script src="{{ url_for('static', path='/app.js') }}?v=2" defer></script>
+    <script src="{{ url_for('static', path='/app.js') }}?v=3" defer></script>
   </body>
 </html>

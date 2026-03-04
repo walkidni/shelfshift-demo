@@ -2,63 +2,72 @@
 
 {% block content %}
   <section class="panel">
-    <h2 class="landing-heading">Library-first tooling for catalog translation pipelines</h2>
+    <h2 class="landing-heading">Build Faster with Docs and Playgrounds</h2>
     <p class="landing-subtitle">
-      Use Shelfshift as a Python library or CLI in automation. The web interface is a lightweight demo surface for quickly exercising local API flows during development.
+      Shelfshift brings reference documentation and interactive playgrounds into one workspace,
+      so you can move from understanding to execution without context switching.
     </p>
     <div class="surface-tags">
-      <span class="surface-tag"><code>shelfshift.core</code> canonical engine</span>
-      <span class="surface-tag"><code>shelfshift</code> CLI automation</span>
-      <span class="surface-tag">FastAPI demo interface</span>
+      <a class="surface-tag surface-tag-link" href="/library"><code>shelfshift.core</code> API-focused docs</a>
+      <a class="surface-tag surface-tag-link" href="/cli"><code>shelfshift</code> CLI command docs</a>
+      <a class="surface-tag surface-tag-link" href="/csv">Interactive conversion playgrounds</a>
     </div>
   </section>
 
-  <section class="panel grid dev-grid">
-    <div class="dev-column">
-      <h2>Quick Start Commands</h2>
-      <p class="api-note">Install once, then use library/CLI directly.</p>
+  <section class="panel">
+    <h2>Explore the Workspace</h2>
+    <div class="capability-grid action-grid">
+      <a class="capability-card action-card" href="/library">
+        <p class="capability-title">Library Documentation</p>
+        <p>Core concepts, canonical model, API reference, and advanced implementation patterns.</p>
+      </a>
+      <a class="capability-card action-card" href="/cli">
+        <p class="capability-title">CLI Documentation</p>
+        <p>Commands, workflow guides, and practical examples for terminal-based operations.</p>
+      </a>
+      <a class="capability-card action-card" href="/url">
+        <p class="capability-title">URL Playground</p>
+        <p>Work with product URLs, inspect canonical payloads, and try export formats interactively.</p>
+      </a>
+      <a class="capability-card action-card" href="/csv">
+        <p class="capability-title">CSV Playground</p>
+        <p>Run source-to-target CSV flows in the browser and check conversion output as you iterate.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="grid dev-grid">
+    <article class="panel info info-cta-panel">
+      <h2>In One Place</h2>
+      <div class="info-cta-grid">
+        <a class="info-cta-link" href="/library">
+          <span class="info-cta-title">Browse Documentation</span>
+          <span class="info-cta-copy">Reference pages stay close to the tooling surface.</span>
+        </a>
+        <a class="info-cta-link" href="/csv">
+          <span class="info-cta-title">Run Conversion Flows</span>
+          <span class="info-cta-copy">Try source-to-target flows with realistic sample inputs.</span>
+        </a>
+        <a class="info-cta-link" href="/url">
+          <span class="info-cta-title">Inspect Canonical Output</span>
+          <span class="info-cta-copy">Review payload structure before production integration.</span>
+        </a>
+      </div>
+    </article>
+
+    <article class="panel dev-column">
+      <h2>Quick Start</h2>
+      <p class="api-note">Install once, then use library and CLI flows directly.</p>
       <pre class="command-preview"><code>pip install shelfshift
 shelfshift --help
 shelfshift detect ./source.csv</code></pre>
 
-      <h3>Library Sample</h3>
+      <h3>Minimal Library Example</h3>
       <pre class="command-preview"><code>from shelfshift.core import import_url, export_csv
 
 result = import_url("https://example.myshopify.com/products/demo-item")
 product = result.products[0]
-exported = export_csv(product, target="shopify", options={"publish": False, "weight_unit": "g"})</code></pre>
-    </div>
-
-    <aside class="info">
-      <h2>Developer Facade</h2>
-      <p>Use these pages to sanity-check endpoint behavior quickly:</p>
-      <ul>
-        <li><a href="/url">URL Playground</a>: POST <code>/api/v1/import</code></li>
-        <li><a href="/csv">CSV Playground</a>: POST <code>/api/v1/import/csv</code></li>
-        <li>Export from canonical payload: POST <code>/api/v1/export/from-product.csv</code></li>
-      </ul>
-    </aside>
-  </section>
-
-  <section class="panel">
-    <h2>Core Capabilities</h2>
-    <div class="capability-grid">
-      <div class="capability-card">
-        <p class="capability-title">Detection</p>
-        <p>Detect URL or CSV source platform before import.</p>
-      </div>
-      <div class="capability-card">
-        <p class="capability-title">Canonicalization</p>
-        <p>Normalize imported data to one typed product contract.</p>
-      </div>
-      <div class="capability-card">
-        <p class="capability-title">Export</p>
-        <p>Emit target-platform CSVs from canonical product payloads.</p>
-      </div>
-      <div class="capability-card">
-        <p class="capability-title">Batch + Partial Success</p>
-        <p>Handle multiple products while preserving per-item errors.</p>
-      </div>
-    </div>
+export_csv(product, target="shopify", options={"publish": False, "weight_unit": "g"})</code></pre>
+    </article>
   </section>
 {% endblock %}

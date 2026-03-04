@@ -2,28 +2,20 @@
 
 ## Install
 
-### pip
-
-```bash
-pip install shelfshift
-```
-
-### uv (project dependency)
+### [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 ```bash
 uv add shelfshift
 uv sync
 ```
 
-### uv (virtualenv-style install)
+### [pip](https://pip.pypa.io/en/stable/installation/)
 
 ```bash
-uv venv
-source .venv/bin/activate
-uv pip install shelfshift
+pip install shelfshift
 ```
 
-## 🚀 Quickstart: Convert a CSV in one line
+## Convert a CSV in one line
 
 ```python
 from shelfshift import convert_csv

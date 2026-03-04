@@ -147,9 +147,9 @@ Use these when you need deterministic canonical normalization/derivation helpers
 
 ### Platform row mappers (pre-CSV control)
 
-Use these low-level mappers when you want platform-ready row dictionaries before CSV serialization.
+Use these low-level mappers when you want more control over product data before turning it into platform-ready CSV rows.
 
-- Shopify (`shelfshift.core.exporters.platforms.shopify`)
+- Module: `shelfshift.core.exporters.platforms.shopify`
 ```python
 product_to_shopify_rows(
     product: Product,
@@ -159,7 +159,7 @@ product_to_shopify_rows(
 ) -> list[dict[str, str]]
 ```
 
-- BigCommerce (`shelfshift.core.exporters.platforms.bigcommerce`)
+- Module: `shelfshift.core.exporters.platforms.bigcommerce`
 ```python
 product_to_bigcommerce_rows(
     product: Product,
@@ -170,7 +170,7 @@ product_to_bigcommerce_rows(
 ) -> list[dict[str, str]]
 ```
 
-- Wix (`shelfshift.core.exporters.platforms.wix`)
+- Module: `shelfshift.core.exporters.platforms.wix`
 ```python
 product_to_wix_rows(
     product: Product,
@@ -180,7 +180,7 @@ product_to_wix_rows(
 ) -> list[dict[str, str]]
 ```
 
-- Squarespace (`shelfshift.core.exporters.platforms.squarespace`)
+- Module: `shelfshift.core.exporters.platforms.squarespace`
 ```python
 product_to_squarespace_rows(
     product: Product,
@@ -192,7 +192,7 @@ product_to_squarespace_rows(
 ) -> list[dict[str, str]]
 ```
 
-- WooCommerce (`shelfshift.core.exporters.platforms.woocommerce`)
+- Module: `shelfshift.core.exporters.platforms.woocommerce`
 ```python
 product_to_woocommerce_rows(
     product: Product,

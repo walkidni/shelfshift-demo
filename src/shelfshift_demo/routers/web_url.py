@@ -82,7 +82,7 @@ def _render_docs_section_page(
 	except FileNotFoundError as exc:
 		raise HTTPException(status_code=404, detail="Documentation page not found.") from exc
 
-	docs_html, docs_toc_html = render_docs_html(section, markdown_text)
+	docs_html, docs_toc_html, docs_code_cells = render_docs_html(section, markdown_text)
 	prev_page, next_page = get_docs_neighbors(section, page)
 
 	def _page_item(item):
@@ -102,6 +102,7 @@ def _render_docs_section_page(
 		docs_toc_html=docs_toc_html,
 		docs_prev_page=_page_item(prev_page) if prev_page else None,
 		docs_next_page=_page_item(next_page) if next_page else None,
+		docs_code_cells=docs_code_cells,
 	)
 
 

@@ -7,6 +7,7 @@ import re
 import bleach
 from markdown import Markdown
 from markupsafe import Markup
+from .docs_runtime import extract_markdown_code_cells
 
 
 @dataclass(frozen=True)
@@ -68,6 +69,12 @@ _ALLOWED_ATTRIBUTES = {
 _ALLOWED_PROTOCOLS = list(bleach.sanitizer.ALLOWED_PROTOCOLS) + ["mailto"]
 _BASH_FENCE_PATTERN = re.compile(r"```bash[^\n]*\n(.*?)\n```", re.DOTALL)
 _HEREDOC_START_PATTERN = re.compile(r"<<-?\s*['\"]?([A-Za-z_][A-Za-z0-9_]*)['\"]?")
+_NAV_LINE_PATTERN = re.compile(
+    r"(?m)^\s*(?:"
+    r"Previous:\s*\[[^\]]+\]\([^)]+\)(?:\s*\|\s*Next:\s*\[[^\]]+\]\([^)]+\))?"
+    r"|Next:\s*\[[^\]]+\]\([^)]+\)"
+    r")\s*$"
+)
 
 _SECTIONS: dict[str, DocsSection] = {
     "library": DocsSection(
@@ -127,9 +134,11 @@ def load_docs_markdown(section: DocsSection, page: DocsPage) -> str:
     return file_path.read_text(encoding="utf-8")
 
 
-def render_docs_html(section: DocsSection, markdown_text: str) -> tuple[Markup, Markup]:
+def render_docs_html(section: DocsSection, markdown_text: str) -> tuple[Markup, Markup, list[dict[str, str]]]:
     normalized = _rewrite_local_links(section, markdown_text)
+    normalized = _strip_embedded_navigation(normalized)
     normalized = _rewrite_bash_fences_as_console_sessions(normalized)
+    docs_code_cells = extract_markdown_code_cells(normalized)
     parser = Markdown(
         extensions=[
             "fenced_code",
@@ -162,7 +171,7 @@ def render_docs_html(section: DocsSection, markdown_text: str) -> tuple[Markup, 
         protocols=_ALLOWED_PROTOCOLS,
         strip=True,
     )
-    return Markup(safe_html), Markup(safe_toc)
+    return Markup(safe_html), Markup(safe_toc), docs_code_cells
 
 
 def _rewrite_local_links(section: DocsSection, text: str) -> str:
@@ -175,6 +184,12 @@ def _rewrite_local_links(section: DocsSection, text: str) -> str:
     # Drop horizontal separators used as markdown file boundaries in source docs.
     rewritten = re.sub(r"\n---\n", "\n\n", rewritten)
     return rewritten
+
+
+def _strip_embedded_navigation(text: str) -> str:
+    stripped = _NAV_LINE_PATTERN.sub("", text)
+    # Collapse excessive blank lines introduced after removing nav lines.
+    return re.sub(r"\n{3,}", "\n\n", stripped).strip()
 
 
 def _rewrite_bash_fences_as_console_sessions(text: str) -> str:

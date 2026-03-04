@@ -59,6 +59,7 @@ def render_docs_page(
     docs_toc_html: str,
     docs_prev_page: dict[str, str] | None,
     docs_next_page: dict[str, str] | None,
+    docs_code_cells: list[dict[str, str]],
 ) -> HTMLResponse:
     settings = get_app_settings(request)
     return templates.TemplateResponse(
@@ -79,6 +80,7 @@ def render_docs_page(
             "docs_toc_html": docs_toc_html,
             "docs_prev_page": docs_prev_page,
             "docs_next_page": docs_next_page,
+            "docs_code_cells": docs_code_cells,
         },
     )
 

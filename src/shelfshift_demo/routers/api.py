@@ -15,6 +15,7 @@ from shelfshift.core import (
 	json_to_products,
 )
 from ..schemas import (
+	DocsRunCellRequest,
 	ExportBigCommerceCsvRequest,
 	ExportFromProductCsvRequest,
 	ExportShopifyCsvRequest,
@@ -25,6 +26,7 @@ from ..schemas import (
 )
 from ..config import get_app_settings
 from ..helpers import importing as _importing_helpers
+from ..helpers.docs_runtime import execute_docs_cell
 from ..helpers.serialization import serialize_product_for_api
 
 router = APIRouter()
@@ -64,6 +66,15 @@ def import_from_api(payload: ImportRequest, request: Request) -> Any:
 		"products": [serialize_product_for_api(product, include_raw=settings.debug) for product in products],
 		"errors": errors,
 	}
+
+
+@router.post("/api/v1/docs/run-cell")
+def run_docs_code_cell(payload: DocsRunCellRequest) -> dict[str, Any]:
+	return execute_docs_cell(
+		payload.code,
+		language=payload.language,
+		session_id=payload.session_id,
+	)
 
 
 @router.post("/api/v1/detect/csv")

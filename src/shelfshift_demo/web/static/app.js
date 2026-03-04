@@ -891,6 +891,154 @@
     });
   };
 
+  const initDocsRunnableCells = () => {
+    const payloadScript = document.getElementById("docs-code-cells");
+    if (!payloadScript) {
+      return;
+    }
+
+    let codeCells;
+    try {
+      codeCells = JSON.parse(payloadScript.textContent || "[]");
+    } catch {
+      return;
+    }
+    if (!Array.isArray(codeCells) || codeCells.length === 0) {
+      return;
+    }
+
+    const renderedBlocks = Array.from(document.querySelectorAll(".docs-content .markdown-body pre"));
+    if (renderedBlocks.length === 0) {
+      return;
+    }
+
+    let sessionId = null;
+    try {
+      sessionId = window.sessionStorage.getItem("docs-cell-session-id");
+    } catch {
+      sessionId = null;
+    }
+
+    const setSessionId = (nextSessionId) => {
+      sessionId = nextSessionId || null;
+      try {
+        if (sessionId) {
+          window.sessionStorage.setItem("docs-cell-session-id", sessionId);
+        } else {
+          window.sessionStorage.removeItem("docs-cell-session-id");
+        }
+      } catch {
+        // Ignore sessionStorage errors in private mode.
+      }
+    };
+
+    const buildOutputText = (payload) => {
+      const parts = [];
+      const stdout = String(payload.stdout || "").trimEnd();
+      const result = payload.result === null || payload.result === undefined ? "" : String(payload.result).trimEnd();
+      const stderr = String(payload.stderr || "").trimEnd();
+
+      if (stdout) {
+        parts.push(stdout);
+      }
+      if (result) {
+        parts.push(result);
+      }
+      if (stderr) {
+        parts.push(stderr);
+      }
+      return parts.join("\n");
+    };
+
+    renderedBlocks.forEach((preElement, index) => {
+      const cell = codeCells[index] || {};
+      const language = String(cell.language || "text");
+      const code = String(cell.code || preElement.textContent || "");
+      const codeContainer = preElement.closest(".codehilite") || preElement;
+      const parent = codeContainer.parentNode;
+      if (!parent) {
+        return;
+      }
+
+      const controls = document.createElement("div");
+      controls.className = "docs-cell-controls";
+
+      const langTag = document.createElement("span");
+      langTag.className = "docs-cell-language";
+      langTag.textContent = language;
+
+      const runButton = document.createElement("button");
+      runButton.type = "button";
+      runButton.className = "docs-cell-run-btn";
+      runButton.textContent = "Run cell";
+
+      const resetButton = document.createElement("button");
+      resetButton.type = "button";
+      resetButton.className = "docs-cell-reset-btn secondary-btn";
+      resetButton.textContent = "Reset runtime";
+      resetButton.style.marginTop = "0";
+
+      controls.appendChild(langTag);
+      controls.appendChild(runButton);
+      controls.appendChild(resetButton);
+
+      const status = document.createElement("p");
+      status.className = "docs-cell-status";
+      status.setAttribute("aria-live", "polite");
+
+      const output = document.createElement("pre");
+      output.className = "docs-cell-output is-hidden";
+
+      parent.insertBefore(controls, codeContainer);
+      parent.insertBefore(status, codeContainer.nextSibling);
+      parent.insertBefore(output, status.nextSibling);
+
+      const runCell = async () => {
+        runButton.disabled = true;
+        runButton.classList.add("btn-loading");
+        status.textContent = "Running...";
+        try {
+          const response = await fetch("/api/v1/docs/run-cell", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              code,
+              language,
+              session_id: sessionId,
+            }),
+          });
+          const payload = await response.json();
+          if (!response.ok) {
+            throw new Error(payload.detail || "Execution failed.");
+          }
+          if (payload.session_id) {
+            setSessionId(payload.session_id);
+          }
+
+          const outputText = buildOutputText(payload);
+          output.textContent = outputText || "(No output)";
+          output.classList.remove("is-hidden");
+          status.textContent = payload.ok
+            ? `Done (cell ${index + 1}).`
+            : `Execution failed (cell ${index + 1}).`;
+        } catch (err) {
+          output.textContent = String(err);
+          output.classList.remove("is-hidden");
+          status.textContent = `Execution failed (cell ${index + 1}).`;
+        } finally {
+          runButton.classList.remove("btn-loading");
+          runButton.disabled = false;
+        }
+      };
+
+      runButton.addEventListener("click", runCell);
+      resetButton.addEventListener("click", () => {
+        setSessionId(null);
+        status.textContent = "Runtime reset.";
+      });
+    });
+  };
+
   document.addEventListener("DOMContentLoaded", () => {
     initCommandPreviews();
     initUrlInputList();
@@ -900,5 +1048,6 @@
     initProductEditor();
     initBatchProductEditor();
     initFormLoadingSpinners();
+    initDocsRunnableCells();
   });
 })();

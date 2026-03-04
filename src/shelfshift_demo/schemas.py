@@ -70,7 +70,14 @@ class ExportFromProductCsvRequest(BaseModel):
     squarespace_product_url: str = Field(default="", examples=["lemons"])
 
 
+class DocsRunCellRequest(BaseModel):
+    code: str
+    language: str = Field(default="text")
+    session_id: str | None = Field(default=None)
+
+
 __all__ = [
+    "DocsRunCellRequest",
     "ExportBigCommerceCsvRequest",
     "ExportFromProductCsvRequest",
     "ExportShopifyCsvRequest",
